@@ -1,32 +1,35 @@
 //-----------Segments------------
-	.disk [filename="game.d64", name="GAME DISK"]
+	.disk [filename="game.d64", name="GAME DISK"]					// Create disk (d64) image
 	{
-		[name="----------------", type="rel"				 ],
-		[name="GAME", 			  type="prg", segments="Code"],
-		[name="----------------", type="rel"				 ],
+		[name="----------------", type="rel"				 ],		// For styling
+		[name="GAME", 			  type="prg", segments="Code"],		// Add Code segment
+		[name="----------------", type="rel"				 ],		// For styling
 	}
 
-	.segmentdef Code [start=$0810]
-	.segmentdef Buffer [start=$8000]
-	.segmentdef Variables [start=$9000]
+	.segmentdef Code [start=$0810]									// Define Code segment
+	.segmentdef Buffer [start=$8000]								// Define Buffer segment
+	.segmentdef Variables [start=$9000]								// Define Variables segment
 
-	.segment Code
+	.segment Code													// Start code segment
 
-	.const charmem = $0400
-	.const colmem = $d800
-	.const buffer  = $8000
+	// Memory Locations
+	.const charmem = $0400											// Character memory
+	.const colmem = $d800											// Colour memory
+	.const buffer  = $8000											// Character buffer
 	
-	.const plrx = $9000
-	.const plry = $9001
-	.const oplrx = $9002
-	.const oplry = $9003
+	// Player variables
+	.const plrx = $9000												// Player X position
+	.const plry = $9001												// Player Y position
+	.const oplrx = $9002											// Player old X position
+	.const oplry = $9003											// Player old Y position
 
-	.label AP = $f9
-	.label ZP = $fb
-	.label ARG1 = $fd
-	.label ARG2 = $fe
-	.label SCNKEY  = $ff9f
-	.label GETIN   = $ffe4
+	// More memory locations
+	.label AP = $f9													// Argument pointer
+	.label ZP = $fb													// Zero Page pointer
+	.label ARG1 = $fd												// Subroutine argument 1
+	.label ARG2 = $fe												// Subroutine argument 2
+	.label SCNKEY  = $ff9f											// ScanKey kernel subroutine
+	.label GETIN   = $ffe4											// GetIn kernel subroutine
 
 //------------Program------------
 	*=$9600
@@ -94,7 +97,7 @@ main:
 	mov plrx : oplrx
 	mov plry : oplry
 
-	// Draw Line
+	// Draw borders
 	mov #40 : ARG1
 	lda #$e6
 	ldx #0
@@ -271,6 +274,9 @@ irq1:
 	jmp $ea81
 
 //--------Pseudo Commands--------
+// Move to memory address
+// src - Source address
+// tar - Target address
 .pseudocommand mov src:tar {
 	lda src
 	sta tar
